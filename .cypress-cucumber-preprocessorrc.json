@@ -1,0 +1,12 @@
+{
+  "nonGlobalStepDefinitions": false,
+  "stepDefinitions": "cypress/support/steps/**/*.ts",
+  "html": {
+    "enabled": true,
+    "output": "cypress/relatorios/cucumber-report.html"
+  },
+  "json": {
+    "enabled": true,
+    "output": "cypress/relatorios/cucumber-report.json"
+  }
+}
