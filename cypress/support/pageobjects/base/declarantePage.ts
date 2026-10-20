@@ -8,7 +8,7 @@ export class DeclarantePage {
   interceptarGetPessoa(cpf: string, data: any) {
     // Se data for null, enviamos um objeto de resposta vazio para evitar erro no cy.intercept
     const response = data ? data : { body: null };
-    cy.intercept('GET', `**/calculo/obter-dados-pessoa?cpf=${cpf.replace(/\D/g, '')}`, response).as('getPessoa');
+    cy.intercept('GET', `**/pessoa/get_pessoa?cpfcnpj=${cpf.replace(/\D/g, '')}`, response).as('getPessoa');
   }
 
   /**
@@ -16,6 +16,17 @@ export class DeclarantePage {
    */
   interceptarGetCep(cep: string, response: any) {
     cy.intercept('GET', `**/endereco/Get_Endereco?cep=${cep.replace(/\D/g, '')}*`, response).as('getCep');
+  }
+
+  /**
+   * Intercepta a chamada de busca de CEP
+   */
+  interceptarGetMunicipio() {
+    cy.intercept('GET', `**/localidades/estados**`, { body: null }).as('getMunicipio');
+  }
+
+  acessarFormularioDeclarante() {
+    cy.visit('/#/nova-guia-declarante');
   }
 
   aguardarDadosCarregarem() {
@@ -113,16 +124,89 @@ export class DeclarantePage {
   }
 
   concordarComTermos() {
+    // cy.wait('@getMunicipio', { timeout: 15000 });
     cy.get(el.checkTermos).click({ force: true });
     cy.get(el.checkTermos).should('be.checked');
   }
 
+  clicarBotaoIniciarDeclaracao() {
+    cy.get(el.btnIniciar).click({ force: true });
+  }
+
   iniciarDeclaracao() {
-    cy.get(el.btnIniciar, { timeout: 10000 }).should('not.be.disabled').click({ force: true });
+    // Garante que os campos obrigatórios básicos não estão vazios antes de tentar clicar
+    // Isso evita cliques prematuros antes do Angular processar a validade do formulário
+    cy.get(el.inputNome, { timeout: 10000 }).should('not.have.value', '');
+    cy.get(el.inputTelefone).should('not.have.value', '');
+    cy.get(el.inputEmail).should('not.have.value', '');
+
+    cy.get(el.selectMunicipio).should('have.value', 'Campo Grande');
+
+    cy.get(el.btnIniciar).should('not.be.disabled').click({ force: true });
   }
 
   validarBotaoIniciarDesabilitado() {
     cy.get(el.btnIniciar).should('be.disabled');
+  }
+
+  preencherTodosOsDados() {
+    this.interceptarGetMunicipio();
+
+    this.interceptarGetPessoa('74555611560', {
+      body: {
+        cpf: "74555611560",
+        nome: "TESTE AUTOMATIZADO",
+        telefone: "67999999111",
+        email: "teste@teste.com",
+        bairro: "Centro",
+        cep: "79002010",
+        codmunicipio: "9051",
+        complemento: " ",
+        endereco: "Rua 14 de Julho",
+        municipio: "Campo Grande",
+        numero: "123",
+        tipoLogradouro: "RUA",
+        uf: "MS"
+      }
+    });
+
+    this.acessarFormularioDeclarante();
+
+    this.aguardarDadosCarregarem();
+    this.preencherNumero('123');
+  }
+
+  avancarParaDadosGerais() {
+    // Intercepta buscas para garantir estabilidade
+    this.interceptarGetMunicipio();
+
+    this.interceptarGetPessoa('74555611560', {
+      body: {
+        cpf: "74555611560",
+        nome: "TESTE AUTOMATIZADO",
+        telefone: "67999999111",
+        email: "teste@teste.com",
+        bairro: "Centro",
+        cep: "79002010",
+        codmunicipio: "9051",
+        complemento: " ",
+        endereco: "Rua 14 de Julho",
+        municipio: "Campo Grande",
+        numero: "123",
+        tipoLogradouro: "RUA",
+        uf: "MS"
+      }
+    });
+
+    this.acessarFormularioDeclarante();
+    this.aguardarDadosCarregarem();
+    this.preencherNumero('123');
+
+    this.concordarComTermos();
+    this.iniciarDeclaracao();
+
+    // Aguarda transição para a tela de Dados Gerais
+    cy.url({ timeout: 15000 }).should('include', '/nova-guia');
   }
 }
 

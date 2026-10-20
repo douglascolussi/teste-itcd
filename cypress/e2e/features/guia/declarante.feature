@@ -1,5 +1,6 @@
 # language: pt
 # encoding: UTF-8
+
 @declarante @regressao
 Funcionalidade: Declarante da Nova Guia ITCD
   Como um usuário iniciando uma nova declaração ITCD
@@ -8,22 +9,27 @@ Funcionalidade: Declarante da Nova Guia ITCD
 
   Contexto:
     Dado que estou autenticado no sistema
-    E que estou na página de início de declaração
 
-  @visual @btn_desabilitado
+  # @skip
+  @visual @btn_desabilitado 
   Cenário: Botão de iniciar desabilitado sem aceitar termos
+    Dado que venha preenchido todos os dados do declarante pela api
     Quando o usuário não marca o checkbox "Declaro que li e concordo..."
     Então o botão de iniciar declaração deve estar desabilitado
     E devo visualizar a mensagem de erro "É necessário concordar com os termos acima, para iniciar a declaração." para o campo declarante
 
+  # @skip
   @negativo @validacao @campos_obrigatorios
   Esquema do Cenário: Validar campos obrigatórios do declarante
+    Dado que estou na página de início de declaração
     Quando concordo com os termos do declarante
-    E tento iniciar a declaração
+    E clico no botão iniciar a declaração
     Então devo visualizar a mensagem de erro "Campo obrigatório." para o campo declarante
 
-  @negativo @formato @validar_formatos
+  # @skip
+  @negativo @formato @validar_formatos 
   Esquema do Cenário: Validação de formato dos campos
+    Dado que venha preenchido todos os dados do declarante pela api
     Quando preencho o campo "<campo>" com "<valor>"
     E concordo com os termos do declarante
     E tento iniciar a declaração
@@ -34,6 +40,7 @@ Funcionalidade: Declarante da Nova Guia ITCD
       | E-mail   | email_errado    |
       | Telefone | (11) 9 9999     |
 
+  # @skip 
   @auto_preenchimento @busca_cep
   Cenário: Auto-preenchimento de endereço pelo CEP
     Dado que intercepto a busca do CEP "79002000" com endereço "RUA TESTE"
@@ -41,6 +48,7 @@ Funcionalidade: Declarante da Nova Guia ITCD
     E aguardo o carregamento do endereço pelo CEP
     Então os campos de endereço devem estar preenchidos e desabilitados
 
+  # @skip 
   @positivo @fluxo_sucesso
   Cenário: Iniciar declaração com sucesso
     Dado que intercepto a busca do declarante CPF "74555611560" como não cadastrado

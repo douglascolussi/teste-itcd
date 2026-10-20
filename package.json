@@ -4,9 +4,10 @@
   "description": "Automação de testes para o sistema ITCD - Sefaz MS",
   "main": "index.js",
   "scripts": {
-    "cy:abrir": "npx cypress run --headed --browser chrome",
+    "cy:abrir": "cypress open",
     "cy:executar": "cypress run",
-    "cy:smoke": "cypress run --env tags=@smoke"
+    "cy:smoke": "cypress run --env tags=@smoke",
+    "cy:tag": "cypress run --env tags="
   },
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^21.0.0",

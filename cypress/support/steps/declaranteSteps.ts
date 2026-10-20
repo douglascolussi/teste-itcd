@@ -16,10 +16,14 @@ Given('que intercepto a busca do declarante CPF {string} com sucesso sem email',
     municipio: "Campo Grande"
   };
   declarantePage.interceptarGetPessoa(cpf, mockData);
+
+  declarantePage.acessarFormularioDeclarante();
 });
 
 Given('que intercepto a busca do declarante CPF {string} como não cadastrado', (cpf: string) => {
   declarantePage.interceptarGetPessoa(cpf, null);
+
+  declarantePage.acessarFormularioDeclarante();
 });
 
 Given('que intercepto a busca do CEP {string} com endereço {string}', (cep: string, logradouro: string) => {
@@ -31,6 +35,8 @@ Given('que intercepto a busca do CEP {string} com endereço {string}', (cep: str
     municipio: "CAMPO GRANDE"
   };
   declarantePage.interceptarGetCep(cep, mockCep);
+
+  declarantePage.acessarFormularioDeclarante();
 });
 
 When('preencho o campo {string} com {string}', (campo: string, valor: string) => {
@@ -60,6 +66,10 @@ When('o usuário não marca o checkbox {string}', (checkbox: string) => {
 
 When('concordo com os termos do declarante', () => {
   declarantePage.concordarComTermos();
+});
+
+When('clico no botão iniciar a declaração', () => {
+  declarantePage.clicarBotaoIniciarDeclaracao();
 });
 
 When('tento iniciar a declaração', () => {
