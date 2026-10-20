@@ -1,12 +1,11 @@
-// cypress/support/pageobjects/base/guiaPage.ts
-import { guiaElements as EGuia } from '../../elements/guiaElements';
+// cypress/support/pageobjects/guia/guiaPage.ts
+import { guiaElements as EGuia } from '../../elements/guia/guiaElements';
 
 export class GuiaPage {
   /**
    * Aguarda o carregamento inicial e valida a presença da tabela
    */
   validarListagemExibida(): this {
-    // Aumentamos o timeout pois o sistema pode demorar a carregar os dados
     cy.get(EGuia.loadingSpinner, { timeout: 30000 }).should('not.exist');
     cy.get(EGuia.tituloPagina).should('be.visible');
     cy.get(EGuia.tabelaGuias).should('be.visible');

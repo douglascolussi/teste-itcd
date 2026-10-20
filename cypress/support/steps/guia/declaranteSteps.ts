@@ -1,6 +1,6 @@
-// cypress/support/steps/declaranteSteps.ts
+// cypress/support/steps/guia/declaranteSteps.ts
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
-import { declarantePage } from '../pageobjects/base/declarantePage';
+import { declarantePage } from '../../pageobjects/guia/declarantePage';
 
 Given('que intercepto a busca do declarante CPF {string} com sucesso sem email', (cpf: string) => {
   const mockData = {
@@ -60,7 +60,6 @@ When('aguardo o carregamento do endereço pelo CEP', () => {
 });
 
 When('o usuário não marca o checkbox {string}', (checkbox: string) => {
-  // Por padrão ele já não vem marcado, mas garantimos aqui
   cy.get('input[type="checkbox"]').should('not.be.checked');
 });
 

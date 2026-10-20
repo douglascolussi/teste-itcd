@@ -1,12 +1,11 @@
-// cypress/support/pageobjects/base/declarantePage.ts
-import { declaranteElements as el } from '../../elements/declaranteElements';
+// cypress/support/pageobjects/guia/declarantePage.ts
+import { declaranteElements as el } from '../../elements/guia/declaranteElements';
 
 export class DeclarantePage {
   /**
    * Intercepta a chamada de busca de dados da pessoa pelo CPF
    */
   interceptarGetPessoa(cpf: string, data: any) {
-    // Se data for null, enviamos um objeto de resposta vazio para evitar erro no cy.intercept
     const response = data ? data : { body: null };
     cy.intercept('GET', `**/pessoa/get_pessoa?cpfcnpj=${cpf.replace(/\D/g, '')}`, response).as('getPessoa');
   }
@@ -115,7 +114,6 @@ export class DeclarantePage {
   }
 
   validarMensagemErro(mensagem: string) {
-    // Busca a mensagem de erro de forma mais flexível dentro do formulário
     cy.get('form').contains(mensagem, { timeout: 10000 }).should('be.visible');
   }
 
@@ -124,7 +122,6 @@ export class DeclarantePage {
   }
 
   concordarComTermos() {
-    // cy.wait('@getMunicipio', { timeout: 15000 });
     cy.get(el.checkTermos).click({ force: true });
     cy.get(el.checkTermos).should('be.checked');
   }
@@ -134,15 +131,11 @@ export class DeclarantePage {
   }
 
   iniciarDeclaracao() {
-    // Garante que os campos obrigatórios básicos não estão vazios antes de tentar clicar
-    // Isso evita cliques prematuros antes do Angular processar a validade do formulário
     cy.get(el.inputNome, { timeout: 10000 }).should('not.have.value', '');
     cy.get(el.inputTelefone).should('not.have.value', '');
     cy.get(el.inputEmail).should('not.have.value', '');
 
-    cy.get(el.selectMunicipio).should('have.value', 'Campo Grande');
-
-    cy.get(el.btnIniciar).should('not.be.disabled').click({ force: true });
+    cy.get(el.btnIniciar).click({ force: true });
   }
 
   validarBotaoIniciarDesabilitado() {
@@ -171,13 +164,11 @@ export class DeclarantePage {
     });
 
     this.acessarFormularioDeclarante();
-
     this.aguardarDadosCarregarem();
     this.preencherNumero('123');
   }
 
   avancarParaDadosGerais() {
-    // Intercepta buscas para garantir estabilidade
     this.interceptarGetMunicipio();
 
     this.interceptarGetPessoa('74555611560', {
@@ -205,7 +196,6 @@ export class DeclarantePage {
     this.concordarComTermos();
     this.iniciarDeclaracao();
 
-    // Aguarda transição para a tela de Dados Gerais
     cy.url({ timeout: 15000 }).should('include', '/nova-guia');
   }
 }

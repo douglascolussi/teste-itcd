@@ -1,4 +1,4 @@
-// cypress/support/elements/guiaElements.ts
+// cypress/support/elements/guia/guiaElements.ts
 export const guiaElements = {
   tituloPagina: 'span:contains("Listagem de Declarações")',
   tabelaGuias: '#sample_1',

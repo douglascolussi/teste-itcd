@@ -1,6 +1,6 @@
-// cypress/support/steps/loginSteps.ts
+// cypress/support/steps/login/loginSteps.ts
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
-import { loginPage } from '../pageobjects/base/loginPage';
+import { loginPage } from '../../pageobjects/login/loginPage';
 
 Given('que acesso o sistema ITCD com o perfil {string}', (perfil: string) => {
   loginPage.acessarSistemaPorPerfil(perfil as 'Contribuinte' | 'Gerencial');

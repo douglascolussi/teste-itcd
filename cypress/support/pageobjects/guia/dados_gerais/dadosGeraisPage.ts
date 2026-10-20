@@ -1,5 +1,5 @@
-// cypress/support/pageobjects/base/dadosGeraisPage.ts
-import { dadosGeraisElements as el } from '../../elements/dadosGeraisElements';
+// cypress/support/pageobjects/guia/dados_gerais/dadosGeraisPage.ts
+import { dadosGeraisElements as el } from '../../../elements/guia/dados_gerais/dadosGeraisElements';
 
 export class DadosGeraisPage {
   selecionarNatureza(natureza: 'Causa Mortis' | 'Doação') {
@@ -13,7 +13,6 @@ export class DadosGeraisPage {
   }
 
   selecionarTipoOperacao(tipo: string) {
-    // Usando .select() que funciona melhor com tags <select> padrão do HTML
     cy.get(el.selectTipoOperacao).should('be.visible').select(tipo);
   }
 
@@ -34,7 +33,6 @@ export class DadosGeraisPage {
   }
 
   responderSimOuNao(pergunta: string, resposta: 'Sim' | 'Não') {
-    // Busca o rádio pelo texto da label ou container
     cy.contains(pergunta).parent().find(resposta === 'Sim' ? el.radioSim : el.radioNao).click({ force: true });
   }
 

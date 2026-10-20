@@ -1,11 +1,11 @@
-// cypress/support/elements/loginElements.ts
+// cypress/support/elements/login/loginElements.ts
 export const loginElements = {
   // URLs de login direto fornecidas pelo usuário
   // Bases das URLs de login (o CPF será concatenado dinamicamente)
   urlContribuinteBase: '/#/login?id=contribuinte1',
   urlGerencialBase: '/#/login?id=gerencial1',
 
-  // Elementos reais visíveis na screenshot
+  // Elementos reais visíveis na dashboard
   dashboardHome: '.sidebar-menu, .page-sidebar', // Container do menu
   menuDeclaracoes: 'span:contains("Declarações")',
   menuDaems: 'span:contains("DAEMS")',

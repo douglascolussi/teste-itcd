@@ -1,4 +1,4 @@
-// cypress/support/elements/dadosGeraisElements.ts
+// cypress/support/elements/guia/dados_gerais/dadosGeraisElements.ts
 export const dadosGeraisElements = {
   radioCausaMortis: 'label:contains("Causa Mortis") input', // Referente a Causa Mortis
   radioDoacao: 'label:contains("Doação") input',      // Referente a Doação

@@ -1,5 +1,5 @@
-// cypress/support/pageobjects/base/loginPage.ts
-import { loginElements as ELogin } from '../../elements/loginElements';
+// cypress/support/pageobjects/login/loginPage.ts
+import { loginElements as ELogin } from '../../elements/login/loginElements';
 
 export class LoginPage {
   /**

@@ -1,7 +1,7 @@
-// cypress/support/steps/guiaSteps.ts
+// cypress/support/steps/guia/guiaSteps.ts
 import { Then, When, Given } from '@badeball/cypress-cucumber-preprocessor';
-import { guiaPage } from '../pageobjects/base/guiaPage';
-import { loginPage } from '../pageobjects/base/loginPage';
+import { guiaPage } from '../../pageobjects/guia/guiaPage';
+import { loginPage } from '../../pageobjects/login/loginPage';
 
 Given('que navego para o módulo de guias', () => {
   loginPage.navegarParaModuloGuias();
@@ -12,7 +12,6 @@ Then('devo visualizar a listagem de guias e declarações', () => {
 });
 
 Then('devo conseguir clicar no botão para gerar uma nova guia', () => {
-  // Por enquanto apenas validamos a presença do botão de visualizar que inicia o fluxo
   cy.log('Validando acesso ao detalhe da guia');
 });
 

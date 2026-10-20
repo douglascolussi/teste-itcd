@@ -1,9 +1,36 @@
-// cypress/support/steps/falecidoSteps.ts
+// cypress/support/steps/guia/pessoas/falecidoSteps.ts
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-import { falecidoPage } from '../pageobjects/base/falecidoPage';
+import { falecidoPage } from '../../../pageobjects/guia/pessoas/falecidoPage';
 
-When('acesso a aba "Pessoas"', () => {
-  falecidoPage.acessarAbaPessoas();
+Given('que intercepto a busca da pessoa CPF {string} com sucesso para o falecido', (cpf: string) => {
+  const mockPessoa = {
+    cpf: cpf,
+    nome: "JOAO FALECIDO TESTE",
+    telefone: "67999999999",
+    email: "falecido@teste.com",
+    cep: "79002-010",
+    endereco: "RUA 14 DE JULHO",
+    numero: "500",
+    bairro: "CENTRO",
+    uf: "MS",
+    municipio: "Campo Grande"
+  };
+  falecidoPage.interceptarBuscarPessoa(cpf, mockPessoa);
+});
+
+Given('que intercepto a busca da pessoa CPF {string} como não cadastrada para o falecido', (cpf: string) => {
+  falecidoPage.interceptarBuscarPessoa(cpf, null);
+});
+
+Given('que intercepto a busca do CEP {string} do falecido com sucesso', (cep: string) => {
+  const mockCep = {
+    cep: cep,
+    logradouro: "AVENIDA AFONSO PENA",
+    bairro: "CENTRO",
+    uf: "MS",
+    municipio: "Campo Grande"
+  };
+  falecidoPage.interceptarBuscarCep(cep, mockCep);
 });
 
 When('clico para cadastrar o Falecido', () => {
@@ -103,35 +130,4 @@ Then('devo visualizar a mensagem {string} para o campo {string} do falecido', (m
 
 Then('devo visualizar a mensagem {string} para os campos do falecido {string}', (msg: string, campos: string) => {
   falecidoPage.validarMensagemErroCampos(campos, msg);
-});
-
-Given('que intercepto a busca da pessoa CPF {string} com sucesso para o falecido', (cpf: string) => {
-  const mockPessoa = {
-    cpf: cpf,
-    nome: "JOAO FALECIDO TESTE",
-    telefone: "67999999999",
-    email: "falecido@teste.com",
-    cep: "79002-010",
-    endereco: "RUA 14 DE JULHO",
-    numero: "500",
-    bairro: "CENTRO",
-    uf: "MS",
-    municipio: "Campo Grande"
-  };
-  falecidoPage.interceptarBuscarPessoa(cpf, mockPessoa);
-});
-
-Given('que intercepto a busca da pessoa CPF {string} como não cadastrada para o falecido', (cpf: string) => {
-  falecidoPage.interceptarBuscarPessoa(cpf, null);
-});
-
-Given('que intercepto a busca do CEP {string} do falecido com sucesso', (cep: string) => {
-  const mockCep = {
-    cep: cep,
-    logradouro: "AVENIDA AFONSO PENA",
-    bairro: "CENTRO",
-    uf: "MS",
-    municipio: "Campo Grande"
-  };
-  falecidoPage.interceptarBuscarCep(cep, mockCep);
 });

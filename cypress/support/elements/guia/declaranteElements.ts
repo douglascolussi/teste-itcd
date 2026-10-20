@@ -1,4 +1,4 @@
-// cypress/support/elements/declaranteElements.ts
+// cypress/support/elements/guia/declaranteElements.ts
 export const declaranteElements = {
   inputCpf: 'input[formControlName="cpf"]',
   inputNome: 'input[formControlName="nome"]',

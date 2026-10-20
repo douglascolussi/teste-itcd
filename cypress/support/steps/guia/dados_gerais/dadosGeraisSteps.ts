@@ -1,8 +1,8 @@
-// cypress/support/steps/dadosGeraisSteps.ts
+// cypress/support/steps/guia/dados_gerais/dadosGeraisSteps.ts
 import { When, Then, Given } from '@badeball/cypress-cucumber-preprocessor';
-import { dadosGeraisPage } from '../pageobjects/base/dadosGeraisPage';
-import { declarantePage } from '../pageobjects/base/declarantePage';
-import { dadosGeraisElements as elDados } from '../elements/dadosGeraisElements';
+import { dadosGeraisPage } from '../../../pageobjects/guia/dados_gerais/dadosGeraisPage';
+import { declarantePage } from '../../../pageobjects/guia/declarantePage';
+import { dadosGeraisElements as elDados } from '../../../elements/guia/dados_gerais/dadosGeraisElements';
 
 Given('que venha preenchido todos os dados do declarante pela api', () => {
     declarantePage.preencherTodosOsDados();
@@ -41,12 +41,12 @@ Then('devo visualizar os campos {string} e {string} como obrigatórios', (l1: st
 
 When('ao responder {string} para {string}', (resposta: string, pergunta: string) => {
     dadosGeraisPage.responderSimOuNao(pergunta, resposta as any);
-    cy.wait(500); // Aguarda renderização condicional do Angular
+    cy.wait(500);
 });
 
 When('respondo {string} para {string}', (resposta: string, pergunta: string) => {
     dadosGeraisPage.responderSimOuNao(pergunta, resposta as any);
-    cy.wait(500); // Aguarda renderização condicional do Angular
+    cy.wait(500);
 });
 
 Then('o campo {string} deve estar {string}', (label: string, estado: string) => {
@@ -154,4 +154,3 @@ Then('não devo visualizar a mensagem {string} para os campos {string}', (msg: s
         });
     });
 });
-
