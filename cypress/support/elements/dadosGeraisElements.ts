@@ -18,6 +18,8 @@ export const dadosGeraisElements = {
   inputDataRegistroReserva: 'input[formControlName="dataRegistroReserva"]',
   inputDataNomeacaoInventariante: 'input[formControlName="dataNomeacaoInventariante"]',
   inputDataSentenca: 'input[formControlName="dataTransitoJulgadoJudicial"]',
+  inputDataTransitoJulgado: 'input[formControlName="dataDoTransitoEmJulgado"]',
+  inputDataLavratura: 'input[formControlName="dataLavraturaEscrita"]',
   inputDataDoacao: 'input[formControlName="dataDaDoacao"]',
   inputProcessoTestamento: 'input[formControlName="processoJudicialAberturaRegistroCumprimentoTestamento"]',
 

@@ -18,7 +18,7 @@ export class DadosGeraisPage {
   }
 
   preencherProcesso(processo: string) {
-    cy.get(el.inputProcesso).should('be.visible').clear().type(processo);
+    cy.get(el.inputProcesso).should('be.visible').clear().type(processo).blur();
   }
 
   preencherDataProtocolo(data: string) {
@@ -26,7 +26,7 @@ export class DadosGeraisPage {
   }
 
   preencherCartorio(cartorio: string) {
-    cy.get(el.inputCartorio).should('be.visible').clear().type(cartorio);
+    cy.get(el.inputCartorio).should('be.visible').clear().type(cartorio).blur();
   }
 
   selecionarUfTramitacao(uf: string) {
@@ -52,6 +52,14 @@ export class DadosGeraisPage {
 
   preencherDataSentenca(data: string) {
     cy.get(el.inputDataSentenca).should('be.visible').clear().type(data);
+  }
+
+  preencherDataTransitoJulgado(data: string) {
+    cy.get(el.inputDataTransitoJulgado).should('be.visible').clear().type(data);
+  }
+
+  preencherDataLavratura(data: string) {
+    cy.get(el.inputDataLavratura).should('be.visible').clear().type(data);
   }
 
   preencherDataDoacao(data: string) {
