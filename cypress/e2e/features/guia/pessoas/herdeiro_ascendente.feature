@@ -5,53 +5,69 @@
 Funcionalidade: Cadastro e Validação de Herdeiros Ascendentes (Causa Mortis)
   Como um declarante ou usuário autenticado
   Quero cadastrar as informações dos herdeiros ascendentes na aba de Pessoas
-  Para garantir a correta transmissão hereditária na linha ascendente conforme as regras sucessórias
+  Para garantir a correta transmissão hereditária na linha ascendente em todos os tipos de causa mortis
 
   Contexto:
     Dado que estou autenticado no sistema
     E tento avançar para o próximo passo sem preencher os dados gerais
     E seleciono a natureza "Causa Mortis"
-    E seleciono o tipo "Ordinário"
-    E acesso a aba "Pessoas"
-    E que o falecido está cadastrado com ascendentes vivos
-    E clico para cadastrar o Herdeiro Ascendente
 
   @validacao_obrigatoriedade
   Cenário: Validar campos obrigatórios ao tentar salvar formulário do herdeiro ascendente em branco
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando clico em salvar herdeiro
     Então devo visualizar a mensagem "Campo obrigatório" para o campo "Tipo de Herdeiro" do herdeiro
     E devo visualizar a mensagem "Campo obrigatório" para o campo "CPF" do herdeiro
     E devo visualizar a mensagem "Campo obrigatório" para o campo "Nome" do herdeiro
     E devo visualizar a mensagem "Campo obrigatório" para o campo "Esta pessoa já é falecida?" do herdeiro
 
-  @opcoes_tipo_herdeiro
-  Cenário: Validar qualificação Ascendente e opções disponíveis no Tipo de Herdeiro
-    Então a Qualificação do herdeiro deve ser "Ascendente"
-    E o campo Tipo de Herdeiro deve estar "habilitado"
-    E o campo Tipo de Herdeiro deve conter a opção "Pai/Mãe"
-    E o campo Tipo de Herdeiro deve conter a opção "Avô/Avó Materno"
-    E o campo Tipo de Herdeiro deve conter a opção "Avô/Avó Paterno"
-    E o campo Tipo de Herdeiro deve conter a opção "Bisavô/Bisavó Materno"
-    E o campo Tipo de Herdeiro deve conter a opção "Bisavô/Bisavó Paterno"
+  @validacao_cpf
+  Cenário: Validar formato inválido e restrição de CPF igual ao do falecido no formulário do ascendente
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
+    Quando preencho o CPF do herdeiro "111.111.111-11"
+    Então devo visualizar a mensagem "CPF inválido" para o campo "CPF" do herdeiro
+    Quando preencho o CPF do herdeiro "01234567890"
+    Então devo visualizar a mensagem "O falecido já possui esse CPF" para o campo "CPF" do herdeiro
 
-  @regras_condicionais_ascendente
-  Cenário: Validar que o campo filho comum com cônjuge não é exibido para herdeiro ascendente
+  @validacao_contato
+  Cenário: Validar formato de e-mail e telefone inválidos no formulário do ascendente
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando respondo "Não" para herdeiro já falecido
-    E seleciono o Tipo de Herdeiro "Pai/Mãe"
-    Então o campo "É filho(a) comum com o cônjuge" do herdeiro deve estar "oculto"
+    E preencho o E-Mail do herdeiro "emailinvalido"
+    Então devo visualizar a mensagem "Campo inválido" para o campo "E-Mail" do herdeiro
+    Quando preencho o Telefone do herdeiro "67999"
+    Então devo visualizar a mensagem "Campo inválido" para o campo "Telefone" do herdeiro
 
-  @pre_morto_sem_direito_representacao
-  Cenário: Validar impedimento de herdeiro ascendente pré-morto por inexistência de direito de representação
+  @pre_morto_bloqueio
+  Cenário: Bloqueio legal ao tentar cadastrar herdeiro ascendente pré-morto
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando seleciono o Tipo de Herdeiro "Pai/Mãe"
     E preencho o CPF do herdeiro "55552058488"
-    E preencho o Nome do herdeiro "MARIA SILVA MAE"
+    E preencho o Nome do herdeiro "JOAO SILVA PAI"
     E respondo "Sim" para herdeiro já falecido
     E preencho a Data de Óbito do herdeiro "2019-01-01"
     Então devo visualizar o modal de validação sem direito de representação com o texto "Não é permitido o cadastramento de Herdeiro(a) Pré-Morto quando não há direito de representação."
     Quando confirmo o modal de validação de herdeiro pré-morto sem direito de representação
+    E clico em voltar no formulário do herdeiro
 
   @pos_morto_informativo
   Cenário: Validar herdeiro ascendente pós-morto com exibição de modal informativo
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando seleciono o Tipo de Herdeiro "Pai/Mãe"
     E preencho o CPF do herdeiro "55552058488"
     E preencho o Nome do herdeiro "MARIA SILVA MAE"
@@ -61,11 +77,15 @@ Funcionalidade: Cadastro e Validação de Herdeiros Ascendentes (Causa Mortis)
     Quando confirmo o modal informativo do herdeiro
     Então o card do herdeiro ascendente "MARIA SILVA MAE" com CPF "555.520.584-88" deve ser exibido
 
-  @cadastro_sucesso
-  Cenário: Cadastrar herdeiro ascendente vivo com sucesso e validar exibição do card
+  @todos_tipos_causa_mortis
+  Esquema do Cenário: Validar cadastro e exibição do card do Herdeiro Ascendente em todos os tipos de Causa Mortis
+    Quando seleciono o tipo "<tipo>"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando seleciono o Tipo de Herdeiro "Pai/Mãe"
     E preencho o CPF do herdeiro "55552058488"
-    E preencho o Nome do herdeiro "JOAO SILVA PAI"
+    E preencho o Nome do herdeiro "<nome>"
     E respondo "Não" para herdeiro já falecido
     E preencho o E-Mail do herdeiro "joao.pai@teste.com"
     E preencho o Telefone do herdeiro "67999887766"
@@ -74,10 +94,21 @@ Funcionalidade: Cadastro e Validação de Herdeiros Ascendentes (Causa Mortis)
     E preencho o CEP do herdeiro "79002010"
     E preencho o número do herdeiro "300"
     E clico em salvar herdeiro
-    Então o card do herdeiro ascendente "JOAO SILVA PAI" com CPF "555.520.584-88" deve ser exibido
+    Então o card do herdeiro ascendente "<nome>" com CPF "555.520.584-88" deve ser exibido
+
+    Exemplos:
+      | tipo            | nome                     |
+      | Ordinário       | JOAO PAI ORDINARIO       |
+      | Arrolamento     | JOAO PAI ARROLAM         |
+      | Extrajudicial   | JOAO PAI EXTRAJUD        |
+      | Alvará Judicial | JOAO PAI ALVARA          |
 
   @regra_sucessao_pais_prioridade
   Cenário: Validar restrição de tipo de herdeiro quando já existe um Pai ou Mãe cadastrado
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com ascendentes vivos
+    E clico para cadastrar o Herdeiro Ascendente
     Quando seleciono o Tipo de Herdeiro "Pai/Mãe"
     E preencho o CPF do herdeiro "55552058488"
     E preencho o Nome do herdeiro "JOAO SILVA PAI"

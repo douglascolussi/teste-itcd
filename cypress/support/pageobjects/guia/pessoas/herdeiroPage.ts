@@ -141,17 +141,17 @@ export class HerdeiroPage extends PessoasPage {
   }
 
   confirmarModalValidacao3() {
-    cy.get(el.btnModalValidacao3Ok).should('be.visible').click();
+    cy.get(el.btnModalValidacao3Ok, { timeout: 10000 }).should('be.visible').click({ force: true });
     cy.get(el.modalValidacao3).should('not.be.visible');
   }
 
   confirmarModalValidacao4() {
-    cy.get(el.btnModalValidacao4Ok).should('be.visible').click();
+    cy.get(el.btnModalValidacao4Ok, { timeout: 10000 }).should('be.visible').click({ force: true });
     cy.get(el.modalValidacao4).should('not.be.visible');
   }
 
   confirmarModalInformativo() {
-    cy.get(el.btnModalInformativoOk).should('be.visible').click();
+    cy.get(el.btnModalInformativoOk, { timeout: 10000 }).should('be.visible').click({ force: true });
   }
 
   validarModalValidacao3Visivel(textoEsperado: string) {

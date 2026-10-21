@@ -4,20 +4,20 @@
 @guia @pessoas @herdeiro @herdeiro_representacao @regressao
 Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e Bisneto (Causa Mortis)
   Como um declarante ou usuário autenticado
-  Quero cadastrar as informações dos herdeiros por representação (netos e bisnetos) na aba de Pessoas
-  Para garantir o cumprimento das regras sucessórias por estirpe e transmissão hereditária correta
+  Quero cadastrar as informações dos herdeiros por representação na aba de Pessoas
+  Para garantir o cumprimento das regras sucessórias em todos os tipos de causa mortis
 
   Contexto:
     Dado que estou autenticado no sistema
     E tento avançar para o próximo passo sem preencher os dados gerais
     E seleciono a natureza "Causa Mortis"
-    E seleciono o tipo "Ordinário"
-    E acesso a aba "Pessoas"
-    E que o falecido está cadastrado com descendentes vivos
-    E que cadastro um filho pré-morto com descendentes vivos
 
   @validacao_obrigatoriedade_neto
   Cenário: Validar campos fixos e obrigatoriedade no formulário do herdeiro neto
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     Então a Qualificação do herdeiro deve ser "Por representação"
     E o campo Tipo de Herdeiro deve estar "desabilitado"
@@ -30,6 +30,10 @@ Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e
 
   @validacao_cpf_contato_neto
   Cenário: Validar CPF inválido, duplicado e formato de contato do herdeiro neto
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     E preencho o CPF do herdeiro "111.111.111-11"
     Então devo visualizar a mensagem "CPF inválido" para o campo "CPF" do herdeiro
@@ -44,11 +48,15 @@ Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e
     Quando preencho o Telefone do herdeiro "67999"
     Então devo visualizar a mensagem "Campo inválido" para o campo "Telefone" do herdeiro
 
-  @cadastro_sucesso_neto_vivo
-  Cenário: Cadastrar herdeiro neto vivo com sucesso e exibir card de representação
+  @todos_tipos_causa_mortis
+  Esquema do Cenário: Validar cadastro e exibição do card do Neto por Representação em todos os tipos de Causa Mortis
+    Quando seleciono o tipo "<tipo>"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     E preencho o CPF do herdeiro "55552058488"
-    E preencho o Nome do herdeiro "LUCAS SILVA NETO"
+    E preencho o Nome do herdeiro "<nome>"
     E respondo "Não" para herdeiro já falecido
     E preencho o E-Mail do herdeiro "lucas.neto@teste.com"
     E preencho o Telefone do herdeiro "67999887711"
@@ -57,10 +65,21 @@ Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e
     E preencho o CEP do herdeiro "79002010"
     E preencho o número do herdeiro "110"
     E clico em salvar herdeiro
-    Então o card do herdeiro por representação "LUCAS SILVA NETO" com CPF "555.520.584-88" deve ser exibido
+    Então o card do herdeiro por representação "<nome>" com CPF "555.520.584-88" deve ser exibido
+
+    Exemplos:
+      | tipo            | nome                 |
+      | Ordinário       | LUCAS NETO ORDINARIO |
+      | Arrolamento     | LUCAS NETO ARROLAM   |
+      | Extrajudicial   | LUCAS NETO EXTRAJUD  |
+      | Alvará Judicial | LUCAS NETO ALVARA    |
 
   @cadastro_neto_falecido_habilita_bisneto
   Cenário: Cadastrar herdeiro neto falecido com descendentes vivos e habilitar cadastro de bisneto
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     E preencho o CPF do herdeiro "55552058488"
     E preencho o Nome do herdeiro "LUCAS SILVA NETO FALECIDO"
@@ -73,6 +92,10 @@ Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e
 
   @impedimento_bisneto_pre_morto
   Cenário: Impedir cadastramento de bisneto pré-morto por falta de direito de representação
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     E preencho o CPF do herdeiro "55552058488"
     E preencho o Nome do herdeiro "LUCAS SILVA NETO FALECIDO"
@@ -94,6 +117,10 @@ Funcionalidade: Cadastro e Validação de Herdeiros por Representação - Neto e
 
   @cadastro_sucesso_bisneto_vivo
   Cenário: Cadastrar bisneto vivo com sucesso e validar disponibilidade do card para múltiplos bisnetos
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado com descendentes vivos
+    E que cadastro um filho pré-morto com descendentes vivos
     Quando clico para cadastrar o herdeiro Neto
     E preencho o CPF do herdeiro "55552058488"
     E preencho o Nome do herdeiro "LUCAS SILVA NETO FALECIDO"

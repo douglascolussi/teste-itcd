@@ -5,19 +5,19 @@
 Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
   Como um declarante ou usuário autenticado
   Quero cadastrar as informações do cônjuge na aba de Pessoas
-  Para garantir a partilha e regras de meação e sucessão
+  Para garantir a partilha e regras de meação e sucessão em todos os tipos de causa mortis
 
   Contexto:
     Dado que estou autenticado no sistema
     E tento avançar para o próximo passo sem preencher os dados gerais
     E seleciono a natureza "Causa Mortis"
-    E seleciono o tipo "Ordinário"
-    E acesso a aba "Pessoas"
-    E que o falecido está cadastrado como casado
-    E clico para cadastrar o Cônjuge
 
   @validacao_obrigatoriedade
   Cenário: Validar campos obrigatórios ao tentar salvar formulário do cônjuge em branco
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando clico em salvar cônjuge
     Então devo visualizar a mensagem "Campo obrigatório" para o campo "CPF" do cônjuge
     E devo visualizar a mensagem "Campo obrigatório" para o campo "Nome" do cônjuge
@@ -34,6 +34,10 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
 
   @validacao_cpf
   Cenário: Validar formato inválido e restrição de CPF igual ao do falecido
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando preencho o CPF do cônjuge "111.111.111-11"
     Então devo visualizar a mensagem "CPF inválido" para o campo "CPF" do cônjuge
     Quando preencho o CPF do cônjuge "01234567890"
@@ -41,6 +45,10 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
 
   @validacao_contato
   Cenário: Validar formato de e-mail e telefone inválidos
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando preencho o E-Mail do cônjuge "emailinvalido"
     Então devo visualizar a mensagem "Campo inválido" para o campo "E-Mail" do cônjuge
     Quando preencho o Telefone do cônjuge "67999"
@@ -48,6 +56,10 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
 
   @condicional_falecimento
   Cenário: Regras condicionais para cônjuge já falecido e bloqueio de data futura
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando respondo "Sim" para cônjuge já falecido
     Então o campo "Data de Óbito" do cônjuge deve estar "visível"
     E o campo "E-Mail" do cônjuge deve estar "oculto"
@@ -60,6 +72,10 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
 
   @condicional_renuncia
   Cenário: Exibição condicional do tipo de renúncia
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando respondo "Não" para cônjuge já falecido
     E respondo "Sim" para renúncia de quinhão do cônjuge
     Então o campo "Tipo de renúncia" do cônjuge deve estar "visível"
@@ -68,16 +84,24 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
 
   @condicional_inventariante
   Cenário: Exibição condicional do termo de inventariante
+    Quando seleciono o tipo "Ordinário"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando respondo "Não" para cônjuge já falecido
     E respondo "Sim" para cônjuge inventariante
     Então o campo "Termo de nomeação de inventariante" do cônjuge deve estar "visível"
     Quando respondo "Não" para cônjuge inventariante
     Então o campo "Termo de nomeação de inventariante" do cônjuge deve estar "oculto"
 
-  @cadastro_sucesso
-  Cenário: Cadastrar cônjuge vivo com sucesso e visualizar card
+  @todos_tipos_causa_mortis
+  Esquema do Cenário: Validar cadastro e exibição do card do Cônjuge em todos os tipos de Causa Mortis
+    Quando seleciono o tipo "<tipo>"
+    E acesso a aba "Pessoas"
+    E que o falecido está cadastrado como casado
+    E clico para cadastrar o Cônjuge
     Quando preencho o CPF do cônjuge "52998224725"
-    E preencho o Nome do cônjuge "Maria Aparecida da Silva"
+    E preencho o Nome do cônjuge "<nome>"
     E respondo "Não" para cônjuge já falecido
     E preencho o E-Mail do cônjuge "maria.silva@teste.com"
     E preencho o Telefone do cônjuge "67999887766"
@@ -86,4 +110,11 @@ Funcionalidade: Cadastro e Validação do Cônjuge/Meeiro (Causa Mortis)
     E preencho o CEP do cônjuge "79002070"
     E preencho o número do cônjuge "200"
     E clico em salvar cônjuge
-    Então o card do cônjuge "Maria Aparecida da Silva" com CPF "529.982.247-25" deve ser exibido
+    Então o card do cônjuge "<nome>" com CPF "529.982.247-25" deve ser exibido
+
+    Exemplos:
+      | tipo            | nome                    |
+      | Ordinário       | MARIA CONJUGE ORDINARIO |
+      | Arrolamento     | MARIA CONJUGE ARROLAM   |
+      | Extrajudicial   | MARIA CONJUGE EXTRAJUD  |
+      | Alvará Judicial | MARIA CONJUGE ALVARA    |
