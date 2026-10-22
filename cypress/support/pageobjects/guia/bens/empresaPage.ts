@@ -55,12 +55,26 @@ export class EmpresaPage {
   }
 
   selecionarUfDaSede(uf: string) {
-    cy.get(el.selectUfDaSede).should('be.visible').select(uf);
-    cy.wait(500);
+    cy.get(el.selectUfDaSede)
+      .should('be.visible')
+      .find('option')
+      .filter((_, opt) => opt.innerText.trim().startsWith(uf))
+      .first()
+      .then(($opt) => {
+        cy.get(el.selectUfDaSede).select($opt.text().trim()).trigger('change');
+      });
   }
 
   selecionarMunicipioDaSede(municipio: string) {
-    cy.get(el.selectMunicipioDaSede).should('be.visible').select(municipio);
+    cy.get(`${el.selectMunicipioDaSede} option`, { timeout: 10000 }).should('have.length.gt', 1);
+    cy.get(el.selectMunicipioDaSede)
+      .should('be.enabled')
+      .find('option')
+      .filter((_, opt) => opt.innerText.trim() === municipio)
+      .first()
+      .then(($opt) => {
+        cy.get(el.selectMunicipioDaSede).select($opt.text().trim()).trigger('change');
+      });
     cy.wait(300);
   }
 

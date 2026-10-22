@@ -49,11 +49,8 @@ export class UrbanoPage {
   }
 
   selecionarMunicipio(municipio: string) {
-    cy.get(el.selectMunicipio).then(($el) => {
-      if (!$el.is(':disabled')) {
-        cy.wrap($el).select(municipio);
-      }
-    });
+    cy.get(`${el.selectMunicipio} option`, { timeout: 10000 }).should('have.length.gt', 1);
+    cy.get(el.selectMunicipio).should('be.enabled').select(municipio);
     cy.wait(300);
   }
 

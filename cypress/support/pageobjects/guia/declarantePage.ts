@@ -21,7 +21,12 @@ export class DeclarantePage {
    * Intercepta a chamada de busca de CEP
    */
   interceptarGetMunicipio() {
-    cy.intercept('GET', `**/localidades/estados**`, { body: null }).as('getMunicipio');
+    cy.intercept('GET', `**/localidades/estados**`, [
+      { id: 5002704, nome: 'Campo Grande' },
+      { id: 5003702, nome: 'Dourados' },
+      { id: 5008305, nome: 'Três Lagoas' },
+      { id: 5003207, nome: 'Corumbá' }
+    ]).as('getMunicipio');
   }
 
   acessarFormularioDeclarante() {
