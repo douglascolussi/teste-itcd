@@ -171,6 +171,24 @@ export class ArquivosPage {
     cy.get(el.selectDescricao).should('not.exist');
     return this;
   }
+
+  /**
+   * Garante a anexação de um arquivo válido na aba Arquivos se ainda não houver nenhum
+   */
+  anexarArquivoObrigatorioValido(): this {
+    this.acessarAbaArquivos();
+    cy.get('body').then(($body) => {
+      if ($body.find(el.linhasArquivos).length === 0) {
+        this.clicarAdicionarArquivo();
+        this.selecionarDescricao('Outros');
+        this.anexarArquivo('comprovante_documental.pdf');
+        this.salvarArquivo();
+        cy.contains(el.alertaGlobal, 'O arquivo foi adicionado a lista.', { timeout: 15000 })
+          .should('be.visible');
+      }
+    });
+    return this;
+  }
 }
 
 export const arquivosPage = new ArquivosPage();

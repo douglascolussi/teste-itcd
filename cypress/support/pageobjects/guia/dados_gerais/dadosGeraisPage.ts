@@ -92,6 +92,45 @@ export class DadosGeraisPage {
   validarCampoResetado() {
     cy.get(el.selectTipoOperacao).should('have.value', 'null');
   }
+
+  /**
+   * Preenche todos os campos específicos obrigatórios da aba Dados Gerais conforme a natureza e o tipo de operação
+   */
+  preencherDadosGeraisCompletosPorTipo(natureza: string, tipo: string) {
+    if (natureza === 'Causa Mortis') {
+      if (tipo === 'Extrajudicial') {
+        this.preencherCartorio('1º Ofício de Notas de Campo Grande');
+        this.selecionarUfTramitacao('MS');
+        this.responderSimOuNao('O inventariante já foi nomeado?', 'Não');
+      } else {
+        // Judicial: Ordinário, Arrolamento, Alvará Judicial
+        this.preencherProcesso('08001234520238120001');
+        this.preencherDataProtocolo('2023-01-10');
+        this.selecionarUfTramitacao('MS');
+        this.responderSimOuNao('Já ocorreu sentença homologatória?', 'Não');
+        this.responderSimOuNao('Existe Testamento?', 'Não');
+      }
+    } else if (natureza === 'Doação') {
+      if (tipo === 'Separação Judicial') {
+        this.preencherProcesso('08001234520238120001');
+        this.preencherDataTransitoJulgado('2023-01-10');
+        this.selecionarUfTramitacao('MS');
+      } else if (tipo === 'Separação Extrajudicial') {
+        this.preencherCartorio('1º Ofício de Notas de Campo Grande');
+        this.selecionarUfTramitacao('MS');
+        this.responderSimOuNao('Já ocorreu lavratura da escritura?', 'Não');
+      } else if (tipo === 'Extinção De Usufruto') {
+        this.preencherDataObito('2022-01-10');
+        this.preencherDataRegistroReserva('2020-01-10');
+      } else if (tipo === 'Renúncia De Usufruto') {
+        this.preencherDataRegistroReserva('2020-01-10');
+        this.responderSimOuNao('A Renúncia já ocorreu?', 'Não');
+      } else {
+        // Tipos de doação padrão: Simples, Cessão De Direitos, Com Reserva De Usufruto, etc.
+        this.responderSimOuNao('A Doação já ocorreu?', 'Não');
+      }
+    }
+  }
 }
 
 export const dadosGeraisPage = new DadosGeraisPage();

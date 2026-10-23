@@ -5,7 +5,7 @@ import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esb
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'https://des.itcd.sefaz.ms.gov.br',
+    baseUrl: process.env.CYPRESS_BASE_URL || 'https://des.itcd.sefaz.ms.gov.br',
     specPattern: 'cypress/e2e/features/**/*.feature',
     supportFile: 'cypress/support/e2e.ts',
     viewportWidth: 1280,

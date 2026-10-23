@@ -9,4 +9,13 @@ export const guiaElements = {
   btnVisualizar: '.fa-eye',
   btnEditar: '.fa-pen-to-square',
   btnNovaGuia: 'a[routerLink="/nova-guia-declarante"]',
+
+  // Ações do Wizard de Nova Guia
+  btnSalvarRascunho: 'button[data-target="#confirma-rascunho"]',
+  btnSalvarEncaminharAnalise: 'button[data-target="#confirma-encaminhar"]',
+  modalConfirmaRascunho: '#confirma-rascunho',
+  modalConfirmaEncaminhar: '#confirma-encaminhar',
+  btnConfirmarRascunhoSim: '#confirma-rascunho button.btn-success-itcd:contains("Sim")',
+  btnConfirmarEncaminharSim: '#confirma-encaminhar button.btn-success-itcd:contains("Sim")',
+  alertaSucesso: '.app-alert, .app-alerts, ngx-alerts, div.alert',
 } as const;

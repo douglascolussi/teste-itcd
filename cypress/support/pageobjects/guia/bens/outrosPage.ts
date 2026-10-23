@@ -90,7 +90,7 @@ export class OutrosPage {
     cy.get(el.alertaGlobal, { timeout: 10000 }).should('be.visible').and('contain', mensagem);
   }
 
-  validarBemNaTabela(especie: string, resumo: string, valorDeclarado: string) {
+    validarBemNaTabela(especie: string, resumo: string, valorDeclarado: string) {
     cy.get(el.tabelaBens, { timeout: 15000 })
       .filter(':visible')
       .first()
@@ -99,6 +99,39 @@ export class OutrosPage {
         cy.contains('td', resumo).should('be.visible');
         cy.contains('td', valorDeclarado).should('be.visible');
       });
+  }
+
+  /**
+   * Cadastra um bem simples (espécie Outros) válido para qualquer natureza/tipo
+   */
+  cadastrarBemSimplesValidoPorNatureza(): this {
+    this.acessarAbaBens();
+    this.clicarAdicionarBem();
+    this.selecionarEspecieOutros();
+    this.preencherDescricao('Joias e objetos valiosos');
+    this.preencherValorTotalDeclarado('100000');
+
+    cy.get('body').then(($body) => {
+      // Causa Mortis
+      if ($body.find(el.inputDataDeAquisicao).is(':visible')) {
+        this.preencherDataDeAquisicao('2020-05-15');
+        this.preencherPercentualPropriedadeDeCujus('10000');
+        this.marcarBemParticularDeCujus(true);
+      }
+      // Separação (Judicial / Extrajudicial)
+      if ($body.find('input[formControlName="percentualDePropriedadeDoCasal"]').is(':visible')) {
+        cy.get('input[formControlName="percentualDePropriedadeDoCasal"]').clear().type('10000').blur();
+        cy.get('select[formControlName="oBemIraPertencerAQuem"]').select('Separando');
+      }
+      // Doação Simples / Padrão
+      if ($body.find(el.inputPercentualPropriedadeDoado).is(':visible')) {
+        this.preencherPercentualPropriedadeDoado('10000');
+      }
+    });
+
+    this.salvarBem();
+    cy.get(el.tabelaBens, { timeout: 15000 }).should('be.visible');
+    return this;
   }
 }
 
