@@ -1,0 +1,80 @@
+{
+  "req": {
+    "falecido": {
+      "nome": "ANTONIO SILVA FALECIDO",
+      "cpf": "01234567890",
+      "dataObito": "2020-01-10",
+      "estadoCivil": 4
+    },
+    "herdeiros": [
+      {
+        "id": "6487b5ce-2a85-4383-836d-c83e9158c9ce",
+        "identificacao": "6487b5ce-2a85-4383-836d-c83e9158c9ce",
+        "nome": "GILSON SILVA FILHO VIVO",
+        "cpfCnpj": "58838180563",
+        "tipo": 2,
+        "qualificacao": 4,
+        "jaFaleceu": false,
+        "dataObito": null,
+        "renunciaAoSeuQuinhao": false,
+        "tipoDeRenuncia": null,
+        "herdeiroRenuncianteId": null,
+        "herdeiroQueCumpreSuaRenunciaId": null,
+        "ehFilhoComumComConjuge": true,
+        "fracao": 0,
+        "grauParentesco": 0,
+        "existeOutroHerdeiroDoMesmoGrauParaReceberAHeranca": false,
+        "existeOutroDescendenteDeDiferenteGrauParaReceberAHeranca": false,
+        "existeHerdeiroAscendenteParaReceberAHeranca": false
+      },
+      {
+        "id": "f8faa3b3-2ae3-4ac9-9de8-8068a8d7666d",
+        "identificacao": "f8faa3b3-2ae3-4ac9-9de8-8068a8d7666d",
+        "nome": "FABIO SILVA POS MORTO",
+        "cpfCnpj": "11144477735",
+        "tipo": 2,
+        "qualificacao": 4,
+        "jaFaleceu": true,
+        "dataObito": "2020-01-10",
+        "renunciaAoSeuQuinhao": false,
+        "tipoDeRenuncia": null,
+        "herdeiroRenuncianteId": null,
+        "herdeiroQueCumpreSuaRenunciaId": null,
+        "ehFilhoComumComConjuge": true,
+        "fracao": 0,
+        "grauParentesco": 0,
+        "existeOutroHerdeiroDoMesmoGrauParaReceberAHeranca": false,
+        "existeOutroDescendenteDeDiferenteGrauParaReceberAHeranca": false,
+        "existeHerdeiroAscendenteParaReceberAHeranca": false
+      }
+    ],
+    "bem": {
+      "descricao": "",
+      "bemParticularDoDeCujus": false,
+      "dataDeAquisicao": ""
+    }
+  },
+  "res": {
+    "data": {
+      "beneficiarios": [
+        {
+          "identificacao": "6487b5ce-2a85-4383-836d-c83e9158c9ce",
+          "nome": "GILSON SILVA FILHO VIVO",
+          "cpfCnpj": "58838180563",
+          "porcentagemIdeal": 100,
+          "porcentagemMeacao": 0,
+          "porcentagemHeranca": 100,
+          "tipoBeneficiario": 2,
+          "porcentagemRenunciada": null
+        }
+      ],
+      "sujeitoAMeacao": false,
+      "inconsistencias": [],
+      "sucesso": true
+    },
+    "status": null,
+    "errors": null,
+    "success": true,
+    "totalItems": null
+  }
+}

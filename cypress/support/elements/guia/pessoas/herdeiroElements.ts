@@ -21,8 +21,8 @@ export const herdeiroElements = {
   containerJaFaleceu: '.form-group:contains("Esta pessoa já é falecida?")',
   inputDataDeObito: 'input[formControlName="dataDeObito"]',
   containerMomentoFalecimento: '.form-group:contains("Momento do falecimento")',
-  radioMomentoAntes: 'label:contains("Antes ou Simultaneamente") input',
-  radioMomentoDepois: 'label:contains("Depois do autor da herança") input',
+  radioMomentoAntes: 'label:contains("Antes") input',
+  radioMomentoDepois: 'label:contains("Depois") input',
 
   // Pré-morto
   containerTinhaDescendenteVivo: '.form-group:contains("tinha descendente vivo na data do óbito")',

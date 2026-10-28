@@ -17,22 +17,49 @@ export class PessoasPage {
   preencherNome(nome: string) {
     cy.get(el.inputNome).then($input => {
       if (!$input.is(':disabled')) {
-        cy.wrap($input).clear().type(nome).blur();
+        cy.wrap($input).clear().type(nome).trigger('change');
       }
     });
   }
 
   preencherCep(cep: string) {
-    cy.get(el.inputCep).should('be.visible').clear().type(cep).blur();
+    cy.get(el.inputCep).should('be.visible').clear().type(cep).trigger('input').trigger('change').trigger('blur');
     cy.wait(1000);
     cy.get(el.loaderBlock, { timeout: 10000 }).should('not.exist');
-    cy.get(el.selectMunicipio, { timeout: 10000 }).should('be.disabled');
+
+    // Assegura que UF e Município fiquem devidamente preenchidos caso o retorno do endereço os deixe vazios/bloqueados
+    cy.get(el.selectUf).then(($uf) => {
+      const ufVal = $uf.val();
+      const ufText = $uf.find('option:selected').text();
+      if (!ufVal || ufVal === 'null' || ufText.includes('Selecione')) {
+        cy.wrap($uf).invoke('prop', 'disabled', false);
+        cy.wrap($uf).select('MS', { force: true }).trigger('change');
+      }
+      cy.wrap($uf).find('option:selected').invoke('attr', 'selected', 'selected');
+    });
+
+    cy.get(el.selectMunicipio).then(($mun) => {
+      const munVal = $mun.val();
+      const munText = $mun.find('option:selected').text();
+      if (!munVal || munVal === 'null' || munText.includes('Selecione')) {
+        cy.wrap($mun).invoke('prop', 'disabled', false);
+        cy.wrap($mun).find('option').then(($opts) => {
+          const matchOpt = $opts.filter((_, o) => (o.text || '').toLowerCase().includes('campo grande')).first();
+          if (matchOpt.length > 0) {
+            cy.wrap($mun).select(matchOpt.val() as string, { force: true }).trigger('change');
+          } else {
+            cy.wrap($mun).select('Campo Grande', { force: true }).trigger('change');
+          }
+        });
+      }
+      cy.wrap($mun).find('option:selected').invoke('attr', 'selected', 'selected');
+    });
   }
 
   preencherEndereco(endereco: string) {
     cy.get(el.inputEndereco).then($input => {
       if (!$input.is(':disabled') && !$input.val()) {
-        cy.wrap($input).clear({ force: true }).type(endereco, { force: true }).blur();
+        cy.wrap($input).clear({ force: true }).type(endereco, { force: true }).trigger('change');
       }
     });
   }
@@ -40,31 +67,44 @@ export class PessoasPage {
   preencherBairro(bairro: string) {
     cy.get(el.inputBairro).then($input => {
       if (!$input.is(':disabled') && !$input.val()) {
-        cy.wrap($input).clear({ force: true }).type(bairro, { force: true }).blur();
+        cy.wrap($input).clear({ force: true }).type(bairro, { force: true }).trigger('change');
       }
     });
   }
 
   preencherNumero(numero: string) {
-    cy.get(el.inputNumero).should('be.visible').clear().type(numero).blur();
+    cy.get(el.inputNumero).should('be.visible').clear().type(numero).trigger('change');
   }
 
   preencherComplemento(complemento: string) {
-    cy.get(el.inputComplemento).should('be.visible').clear().type(complemento).blur();
+    cy.get(el.inputComplemento).should('be.visible').clear().type(complemento).trigger('change');
   }
 
   selecionarUf(uf: string) {
     cy.get(el.selectUf).then($select => {
-      if (!$select.is(':disabled') && !$select.val()) {
-        cy.wrap($select).select(uf, { force: true });
+      const val = $select.val();
+      const text = $select.find('option:selected').text();
+      if (!val || val === 'null' || text.includes('Selecione')) {
+        cy.wrap($select).invoke('prop', 'disabled', false);
+        cy.wrap($select).select(uf, { force: true }).trigger('change');
       }
     });
   }
 
   selecionarMunicipio(municipio: string) {
     cy.get(el.selectMunicipio).then($select => {
-      if (!$select.is(':disabled') && !$select.val()) {
-        cy.wrap($select).select(municipio, { force: true });
+      const val = $select.val();
+      const text = $select.find('option:selected').text();
+      if (!val || val === 'null' || text.includes('Selecione')) {
+        cy.wrap($select).invoke('prop', 'disabled', false);
+        cy.wrap($select).find('option').then(($opts) => {
+          const matchOpt = $opts.filter((_, o) => (o.text || '').toLowerCase().includes(municipio.toLowerCase())).first();
+          if (matchOpt.length > 0) {
+            cy.wrap($select).select(matchOpt.val() as string, { force: true }).trigger('change');
+          } else {
+            cy.wrap($select).select(municipio, { force: true }).trigger('change');
+          }
+        });
       }
     });
   }

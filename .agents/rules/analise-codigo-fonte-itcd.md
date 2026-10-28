@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Regra: Análise do Código Fonte ITCD e Graphify
 
 Esta regra define o direcionamento obrigatório para análise do código fonte da aplicação ITCD ao projetar ou implementar cenários de teste automatizados em `teste-itcd`.
@@ -23,3 +27,8 @@ Esta regra define o direcionamento obrigatório para análise do código fonte d
      - `cypress/support/pageobjects/`
      - `cypress/support/steps/`
    - Toda comunicação e Gherkin em Português (PT-BR).
+
+3. **Validação e Execução Contínua dos Testes:**
+   - Imediatamente após a criação ou modificação de um teste, é obrigatório executá-lo para validar seu funcionamento na prática.
+   - O processo de desenvolvimento do teste só é considerado finalizado quando a execução ocorrer com sucesso total (status "passed").
+   - Caso o teste falhe, analise os logs de erro, realize os ajustes necessários nos arquivos criados (elementos, page objects ou steps) e reexecute-o em um ciclo contínuo até confirmar que está operando perfeitamente.

@@ -34,11 +34,14 @@ export class FalecidoPage extends PessoasPage {
 
   selecionarEstadoCivil(estadoCivil: string) {
     cy.get(el.selectEstadoCivil).should('be.visible').select(estadoCivil);
+    cy.get(el.selectEstadoCivil).find('option:selected').invoke('attr', 'selected', 'selected');
     cy.wait(300);
   }
 
   selecionarRegimeCasamento(regime: string) {
     cy.get(el.selectRegimeDeCasamento).should('be.visible').select(regime);
+    cy.get(el.selectRegimeDeCasamento).find('option:selected').invoke('attr', 'selected', 'selected');
+    cy.wait(300);
   }
 
   preencherDataCasamento(data: string) {

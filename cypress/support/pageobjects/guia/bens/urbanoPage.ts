@@ -2,16 +2,8 @@
 import { urbanoElements as el } from '../../../elements/guia/bens/urbanoElements';
 
 export class UrbanoPage {
-  configurarIntercepts() {
-    cy.intercept('GET', '**/endereco/Get_Endereco?cep=*', {
-      statusCode: 200,
-      body: null,
-    }).as('getEnderecoCep');
-  }
-
   // Navegação
   acessarAbaBens() {
-    this.configurarIntercepts();
     cy.get(el.abaBens, { timeout: 15000 }).should('be.visible').click();
     cy.wait(500);
   }

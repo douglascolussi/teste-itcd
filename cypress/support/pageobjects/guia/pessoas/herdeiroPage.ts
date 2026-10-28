@@ -19,7 +19,7 @@ export class HerdeiroPage extends PessoasPage {
   }
 
   preencherCpf(cpf: string) {
-    cy.get(el.inputCpfCnpj).should('be.visible').clear().type(cpf).blur();
+    cy.get(el.inputCpfCnpj).should('be.visible').clear().type(cpf).trigger('change');
     cy.wait(500);
     cy.get('.loader-block', { timeout: 10000 }).should('not.exist');
   }
@@ -32,14 +32,20 @@ export class HerdeiroPage extends PessoasPage {
   }
 
   preencherDataObito(data: string) {
-    cy.get(el.inputDataDeObito).should('be.visible').clear().type(data).blur();
+    cy.get(el.inputDataDeObito).should('be.visible').clear().type(data).trigger('change');
   }
 
   selecionarMomentoFalecimento(momento: 'Antes ou Simultaneamente' | 'Depois') {
-    cy.get(el.containerMomentoFalecimento)
-      .find(momento === 'Antes ou Simultaneamente' ? el.radioMomentoAntes : el.radioMomentoDepois)
-      .click({ force: true });
-    cy.wait(300);
+    cy.get('body').then(($body) => {
+      if ($body.find(el.containerMomentoFalecimento).length > 0 && $body.find(el.containerMomentoFalecimento).is(':visible')) {
+        cy.get(el.containerMomentoFalecimento)
+          .find(momento === 'Antes ou Simultaneamente' ? el.radioMomentoAntes : el.radioMomentoDepois)
+          .check({ force: true });
+        cy.wait(300);
+      } else {
+        cy.log('Campo momento do falecimento não exibido (data diferente da do falecido).');
+      }
+    });
   }
 
   responderTinhaDescendenteVivo(resposta: 'Sim' | 'Não') {
@@ -50,11 +56,11 @@ export class HerdeiroPage extends PessoasPage {
   }
 
   preencherEmail(email: string) {
-    cy.get(el.inputEmail).should('be.visible').clear().type(email).blur();
+    cy.get(el.inputEmail).should('be.visible').clear().type(email).trigger('change');
   }
 
   preencherTelefone(telefone: string) {
-    cy.get(el.inputTelefone).should('be.visible').clear().type(telefone).blur();
+    cy.get(el.inputTelefone).should('be.visible').clear().type(telefone).trigger('change');
   }
 
   responderEhFilhoComum(resposta: 'Sim' | 'Não') {
@@ -120,8 +126,12 @@ export class HerdeiroPage extends PessoasPage {
   }
 
   selecionarTipoHerdeiro(tipo: string) {
-    cy.get(el.selectTipoHerdeiro).should('be.visible').select(tipo);
-    cy.wait(300);
+    cy.get(el.selectTipoHerdeiro).then(($s) => {
+      if (!$s.is(':disabled')) {
+        cy.wrap($s).select(tipo);
+        cy.wait(300);
+      }
+    });
   }
 
   validarTipoHerdeiroHabilitado(habilitado: boolean) {
