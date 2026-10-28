@@ -1,4 +1,4 @@
-// cypress/support/elements/guia/dividasElements.ts
+// cypress/support/elements/guia/dividas/dividasElements.ts
 
 /**
  * Seletores da Aba e Formulário de Anexo de Arquivos de Dívidas da Guia
@@ -51,6 +51,18 @@ export const dividasElements = {
   checkboxSeguroPrestamista: 'input[formControlName="cobertaPorSeguroPrestamista"]',
   btnSalvarDivida: '#divAcoes button:contains("Salvar")',
   btnCancelarDivida: '#divAcoes button:contains("Cancelar")',
+
+  // Campos do Formulário de Dívida (Separação / Percentuais)
+  selectTipoDivida: 'form#dividaForm select[formControlName="tipo"]',
+  inputDataConstituicao: 'form#dividaForm input[formControlName="dataDeConstituicao"]',
+  inputValorDivida: 'form#dividaForm input[formControlName="valor"]',
+  textareaDescricaoDivida: 'form#dividaForm textarea[formControlName="descricao"]',
+  selectADividaIraPertencerAQuem: 'form#dividaForm select[formControlName="aDividaIraPertencerAQuem"]',
+  inputPercentualParaOSeparando: 'form#dividaForm input[formControlName="percentualParaOSeparando"]',
+  inputPercentualParaASeparanda: 'form#dividaForm input[formControlName="percentualParaASeparanda"]',
+  selectSituacaoProcessual: 'form#dividaForm select[formControlName="situacaoProcessual"]',
+  tabelaDividasCadastradas: 'table.table tbody tr:not(.text-center-row:contains("Nenhuma dívida"))',
+  btnEditarPrimeiraDivida: 'button[title="Editar dívida"]',
 
   // Campos Comuns de Bens Auxiliares (Causa Mortis, Doação e Separação)
   inputDataAquisicaoBem: 'input[formControlName="dataDeAquisicao"]:enabled',

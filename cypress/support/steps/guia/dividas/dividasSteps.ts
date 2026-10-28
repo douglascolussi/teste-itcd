@@ -1,6 +1,6 @@
-// cypress/support/steps/guia/dividasSteps.ts
+// cypress/support/steps/guia/dividas/dividasSteps.ts
 import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
-import { dividasPage } from '../../pageobjects/guia/dividasPage';
+import { dividasPage } from '../../../pageobjects/guia/dividas/dividasPage';
 
 // Navegação
 When('acesso a aba "Dívidas"', () => {
@@ -143,5 +143,105 @@ Then('o bem vinculado contendo {string} deve estar selecionado na dívida', (des
 
 Then('a natureza da dívida deve ser sugerida como {string}', (natureza: string) => {
   dividasPage.validarNaturezaSugerida(natureza);
+});
+
+// Steps de Separação / Percentuais de Dívida
+When('que o usuário está cadastrando uma dívida', () => {
+  dividasPage.acessarAbaDividas();
+  dividasPage.abrirFormularioDivida();
+  dividasPage.selecionarTipoDivida('Financiamento Imobiliário');
+});
+
+When('selecionar {string} em "A dívida irá pertencer a quem?"', (opcao: string) => {
+  dividasPage.selecionarADividaIraPertencerAQuem(opcao);
+});
+
+When('selecionar {string}', (opcao: string) => {
+  if (['Separando', 'Separanda', 'Ambos'].includes(opcao)) {
+    dividasPage.selecionarADividaIraPertencerAQuem(opcao);
+  }
+});
+
+When('alterar a opção para {string}', (opcao: string) => {
+  dividasPage.selecionarADividaIraPertencerAQuem(opcao);
+});
+
+When('que a opção {string} está selecionada', (opcao: string) => {
+  dividasPage.selecionarADividaIraPertencerAQuem(opcao);
+});
+
+When('que o usuário selecionou {string} e os percentuais estão em {string} \\/ {string}', (opcao: string, percSeparando: string, percSeparanda: string) => {
+  dividasPage.selecionarADividaIraPertencerAQuem(opcao);
+  dividasPage.validarPercentualSeparando(percSeparando);
+  dividasPage.validarPercentualSeparanda(percSeparanda);
+});
+
+When('o usuário informar {string} no percentual do Separando', (percentual: string) => {
+  dividasPage.preencherPercentualSeparando(percentual);
+});
+
+When('o usuário informar {string} no percentual da Separanda', (percentual: string) => {
+  dividasPage.preencherPercentualSeparanda(percentual);
+});
+
+When('o usuário informar {string} ou {string} para uma das partes e clicar em "Salvar"', (perc1: string, _perc2: string) => {
+  dividasPage.preencherCamposObrigatoriosDivida();
+  dividasPage.preencherPercentualSeparando(perc1);
+  dividasPage.clicarSalvarDivida();
+});
+
+When('a soma dos percentuais for diferente de 100% e o usuário clicar em "Salvar"', () => {
+  dividasPage.preencherCamposObrigatoriosDivida();
+  dividasPage.preencherPercentualSeparando('30,00%');
+  dividasPage.preencherPercentualSeparanda('40,00%');
+  dividasPage.clicarSalvarDivida();
+});
+
+Then('o sistema deve preencher {string} para o Separando e {string} para a Separanda, com os campos editáveis', (percSeparando: string, percSeparanda: string) => {
+  dividasPage.validarPercentualSeparando(percSeparando);
+  dividasPage.validarPercentualSeparanda(percSeparanda);
+  dividasPage.validarCamposPercentuaisEditaveis(true);
+});
+
+Then('o sistema deve preencher {string} para o Separando e {string} para a Separanda, com os campos bloqueados', (percSeparando: string, percSeparanda: string) => {
+  dividasPage.validarPercentualSeparando(percSeparando);
+  dividasPage.validarPercentualSeparanda(percSeparanda);
+  dividasPage.validarCamposPercentuaisEditaveis(false);
+});
+
+Then('o sistema deve preencher automaticamente {string} no percentual da Separanda', (percentual: string) => {
+  dividasPage.validarPercentualSeparanda(percentual);
+});
+
+Then('o sistema deve recalcular os percentuais para {string} \\/ {string}', (percSeparando: string, percSeparanda: string) => {
+  dividasPage.validarPercentualSeparando(percSeparando);
+  dividasPage.validarPercentualSeparanda(percSeparanda);
+});
+
+Then('o sistema deve impedir o salvamento e exibir a mensagem: {string}', (mensagem: string) => {
+  dividasPage.validarMensagemBloqueio(mensagem);
+});
+
+When('que existe uma dívida salva com "Ambos" e percentuais {string} \\/ {string}', (percSeparando: string, percSeparanda: string) => {
+  dividasPage.acessarAbaDividas();
+  dividasPage.abrirFormularioDivida();
+  dividasPage.selecionarTipoDivida('Empréstimo');
+  dividasPage.preencherCamposObrigatoriosDivida('Dívida Salva Ambos', '500000');
+  dividasPage.selecionarADividaIraPertencerAQuem('Ambos');
+  dividasPage.preencherPercentualSeparando(percSeparando);
+  dividasPage.clicarAdicionarAnexo();
+  dividasPage.selecionarDescricaoAnexo('Extrato do Saldo Devedor');
+  dividasPage.anexarArquivo('comprovante_divida.pdf');
+  dividasPage.salvarAnexo();
+  dividasPage.clicarSalvarDivida();
+});
+
+When('o usuário abrir a edição do item', () => {
+  dividasPage.abrirEdicaoPrimeiraDivida();
+});
+
+Then('o sistema deve exibir os percentuais salvos \\({string} \\/ {string}\\) e não sobrescrevê-los com o padrão', (percSeparando: string, percSeparanda: string) => {
+  dividasPage.validarPercentualSeparando(percSeparando);
+  dividasPage.validarPercentualSeparanda(percSeparanda);
 });
 

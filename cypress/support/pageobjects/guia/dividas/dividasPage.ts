@@ -1,24 +1,24 @@
-// cypress/support/pageobjects/guia/dividasPage.ts
-import { dividasElements as el } from '../../elements/guia/dividasElements';
-import { equipamentoAgricolaElements as elEquip } from '../../elements/guia/bens/equipamentoAgricolaElements';
-import { graosElements as elGraos } from '../../elements/guia/bens/graosElements';
-import { titulosElements as elTitulos } from '../../elements/guia/bens/titulosElements';
-import { numerariosElements as elNumerarios } from '../../elements/guia/bens/numerariosElements';
-import { empresaElements as elEmpresa } from '../../elements/guia/bens/empresaElements';
-import { semoventesElements as elSemoventes } from '../../elements/guia/bens/semoventesElements';
-import { urbanoElements as elUrbano } from '../../elements/guia/bens/urbanoElements';
-import { ruralElements as elRural } from '../../elements/guia/bens/ruralElements';
-import { arquivosPage } from './arquivosPage';
-import { outrosPage } from './bens/outrosPage';
-import { veiculoPage } from './bens/veiculoPage';
-import { equipamentoAgricolaPage } from './bens/equipamentoAgricolaPage';
-import { graosPage } from './bens/graosPage';
-import { titulosPage } from './bens/titulosPage';
-import { numerariosPage } from './bens/numerariosPage';
-import { empresaPage } from './bens/empresaPage';
-import { semoventesPage } from './bens/semoventesPage';
-import { urbanoPage } from './bens/urbanoPage';
-import { ruralPage } from './bens/ruralPage';
+// cypress/support/pageobjects/guia/dividas/dividasPage.ts
+import { dividasElements as el } from '../../../elements/guia/dividas/dividasElements';
+import { equipamentoAgricolaElements as elEquip } from '../../../elements/guia/bens/equipamentoAgricolaElements';
+import { graosElements as elGraos } from '../../../elements/guia/bens/graosElements';
+import { titulosElements as elTitulos } from '../../../elements/guia/bens/titulosElements';
+import { numerariosElements as elNumerarios } from '../../../elements/guia/bens/numerariosElements';
+import { empresaElements as elEmpresa } from '../../../elements/guia/bens/empresaElements';
+import { semoventesElements as elSemoventes } from '../../../elements/guia/bens/semoventesElements';
+import { urbanoElements as elUrbano } from '../../../elements/guia/bens/urbanoElements';
+import { ruralElements as elRural } from '../../../elements/guia/bens/ruralElements';
+import { arquivosPage } from '../arquivosPage';
+import { outrosPage } from '../bens/outrosPage';
+import { veiculoPage } from '../bens/veiculoPage';
+import { equipamentoAgricolaPage } from '../bens/equipamentoAgricolaPage';
+import { graosPage } from '../bens/graosPage';
+import { titulosPage } from '../bens/titulosPage';
+import { numerariosPage } from '../bens/numerariosPage';
+import { empresaPage } from '../bens/empresaPage';
+import { semoventesPage } from '../bens/semoventesPage';
+import { urbanoPage } from '../bens/urbanoPage';
+import { ruralPage } from '../bens/ruralPage';
 
 /**
  * PageObject da Aba e Tabela de Anexos de Dívidas da Guia
@@ -115,7 +115,18 @@ export class DividasPage {
   }
 
   selecionarDescricaoAnexo(descricao: string): this {
-    cy.get(el.selectDescricaoAnexo).should('be.visible').select(descricao);
+    cy.get(el.selectDescricaoAnexo, { timeout: 10000 })
+      .should('be.visible')
+      .then(($select) => {
+        const option = $select.find('option').filter((_, opt) => {
+          return ((opt as HTMLOptionElement).text || '').trim().toLowerCase() === descricao.trim().toLowerCase();
+        });
+        if (option.length > 0) {
+          cy.wrap($select).select((option[0] as HTMLOptionElement).text.trim());
+        } else {
+          cy.wrap($select).select(descricao);
+        }
+      });
     return this;
   }
 
@@ -531,7 +542,6 @@ export class DividasPage {
         break;
 
       case 'Imóvel Urbano':
-        urbanoPage.configurarIntercepts();
         urbanoPage.clicarAdicionarBem();
         urbanoPage.selecionarEspecieUrbano();
         urbanoPage.selecionarMunicipio('Campo Grande');
@@ -619,6 +629,175 @@ export class DividasPage {
     ];
     tipos.forEach((tipo) => {
       this.cadastrarBemPorEspecie(tipo);
+    });
+    return this;
+  }
+
+  // Método auxiliar para seleção garantida em selects do Angular com [ngValue]
+  private selecionarOpcaoAngular(seletor: string, textoOpcao: string): this {
+    cy.get(seletor, { timeout: 10000 })
+      .should('be.visible')
+      .then(($select) => {
+        const selectEl = $select[0] as HTMLSelectElement;
+        const options = Array.from(selectEl.options);
+        const targetOption = options.find((opt) => {
+          const txt = opt.text.trim().toLowerCase();
+          const target = textoOpcao.trim().toLowerCase();
+          return txt === target || txt.includes(target);
+        });
+
+        if (targetOption) {
+          selectEl.selectedIndex = targetOption.index;
+          options.forEach((opt, idx) => {
+            opt.selected = (idx === targetOption.index);
+          });
+          selectEl.value = targetOption.value;
+          selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+          selectEl.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      });
+
+    cy.get(seletor).then(($select) => {
+      const selectEl = $select[0] as HTMLSelectElement;
+      const options = Array.from(selectEl.options);
+      const targetOption = options.find((opt) => {
+        const txt = opt.text.trim().toLowerCase();
+        const target = textoOpcao.trim().toLowerCase();
+        return txt === target || txt.includes(target);
+      });
+      if (targetOption) {
+        cy.wrap($select).select(targetOption.value, { force: true });
+      }
+    });
+
+    // Garante que o texto selecionado na visualização não seja "Selecione"
+    cy.get(seletor).should(($select) => {
+      const selectEl = $select[0] as HTMLSelectElement;
+      const textoAtual = selectEl.options[selectEl.selectedIndex]?.text?.trim() || '';
+      expect(textoAtual.toLowerCase(), `O campo selecionado deve exibir "${textoOpcao}"`).to.include(textoOpcao.trim().toLowerCase());
+    });
+
+    return this;
+  }
+
+  // Métodos de Separação / Percentuais de Dívida
+  selecionarTipoDivida(tipo: string): this {
+    return this.selecionarOpcaoAngular(el.selectTipoDivida, tipo);
+  }
+
+  selecionarADividaIraPertencerAQuem(opcao: string): this {
+    return this.selecionarOpcaoAngular(el.selectADividaIraPertencerAQuem, opcao);
+  }
+
+  preencherPercentualSeparando(percentual: string): this {
+    const valorLimpo = percentual.replace(/[^\d]/g, '');
+    cy.get(el.inputPercentualParaOSeparando, { timeout: 10000 })
+      .should('be.visible')
+      .clear()
+      .type(valorLimpo)
+      .trigger('keyup')
+      .trigger('change');
+    return this;
+  }
+
+  preencherPercentualSeparanda(percentual: string): this {
+    const valorLimpo = percentual.replace(/[^\d]/g, '');
+    cy.get(el.inputPercentualParaASeparanda, { timeout: 10000 })
+      .should('be.visible')
+      .clear()
+      .type(valorLimpo)
+      .trigger('keyup')
+      .trigger('change');
+    return this;
+  }
+
+  validarPercentualSeparando(esperado: string): this {
+    const valorEsperado = esperado.replace('%', '').trim();
+    cy.get(el.inputPercentualParaOSeparando, { timeout: 10000 })
+      .should('be.visible')
+      .invoke('val')
+      .then((val: any) => {
+        const texto = String(val).replace(/\s+/g, ' ').replace('%', '').trim();
+        expect(texto).to.include(valorEsperado);
+      });
+    return this;
+  }
+
+  validarPercentualSeparanda(esperado: string): this {
+    const valorEsperado = esperado.replace('%', '').trim();
+    cy.get(el.inputPercentualParaASeparanda, { timeout: 10000 })
+      .should('be.visible')
+      .invoke('val')
+      .then((val: any) => {
+        const texto = String(val).replace(/\s+/g, ' ').replace('%', '').trim();
+        expect(texto).to.include(valorEsperado);
+      });
+    return this;
+  }
+
+  validarCamposPercentuaisEditaveis(editaveis: boolean): this {
+    if (editaveis) {
+      cy.get(el.inputPercentualParaOSeparando)
+        .should('be.visible')
+        .should('not.have.attr', 'readonly');
+      cy.get(el.inputPercentualParaOSeparando)
+        .should('be.enabled');
+      cy.get(el.inputPercentualParaASeparanda)
+        .should('be.visible')
+        .should('not.have.attr', 'readonly');
+      cy.get(el.inputPercentualParaASeparanda)
+        .should('be.enabled');
+    } else {
+      cy.get('body').then(($body) => {
+        const separando = $body.find(el.inputPercentualParaOSeparando);
+        const separanda = $body.find(el.inputPercentualParaASeparanda);
+        const separandoBloqueado = separando.is(':disabled') || separando.attr('readonly') !== undefined;
+        const separandaBloqueada = separanda.is(':disabled') || separanda.attr('readonly') !== undefined;
+        expect(separandoBloqueado, 'Separando deve estar bloqueado').to.be.true;
+        expect(separandaBloqueada, 'Separanda deve estar bloqueada').to.be.true;
+      });
+    }
+    return this;
+  }
+
+  preencherCamposObrigatoriosDivida(descricao: string = 'Dívida de teste', valor: string = '1000000'): this {
+    cy.get(el.textareaDescricaoDivida).clear().type(descricao);
+    cy.get(el.inputDataConstituicao).clear().type('2023-01-15');
+    const valorLimpo = valor.replace(/[^\d]/g, '');
+    cy.get(el.inputValorDivida).clear().type(valorLimpo);
+    cy.get(el.selectNaturezaDivida).should('be.visible').find('option').filter((_, opt) => {
+      return ((opt as HTMLOptionElement).text || '').trim().toLowerCase() === 'comum';
+    }).then(($opt) => {
+      cy.get(el.selectNaturezaDivida).select($opt.val() as string, { force: true }).trigger('change');
+    });
+    cy.get(el.selectSituacaoProcessual).should('be.visible').find('option').filter((_, opt) => {
+      return ((opt as HTMLOptionElement).text || '').trim().toLowerCase().includes('não está em cobrança');
+    }).then(($opt) => {
+      cy.get(el.selectSituacaoProcessual).select($opt.val() as string, { force: true }).trigger('change');
+    });
+    return this;
+  }
+
+  abrirEdicaoPrimeiraDivida(): this {
+    cy.get(el.btnEditarPrimeiraDivida, { timeout: 10000 })
+      .first()
+      .should('be.visible')
+      .click();
+    return this;
+  }
+
+  validarMensagemBloqueio(mensagem: string): this {
+    cy.get('body').then(($body) => {
+      const temToast = $body.find(`${el.alertaGlobal}:contains("${mensagem}")`).length > 0;
+      const temTexto = $body.text().includes(mensagem);
+      if (!temToast && !temTexto) {
+        // Também pode ser captura de window:alert disparado no Angular
+        cy.wrap(true).then(() => {
+          expect(temToast || temTexto, `Mensagem "${mensagem}" deve ser exibida ao usuário`).to.be.true;
+        });
+      } else {
+        expect(temToast || temTexto).to.be.true;
+      }
     });
     return this;
   }
